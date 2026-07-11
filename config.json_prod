@@ -1,0 +1,30 @@
+{
+  "generateTemplate":false,
+  "defaultConfig": {
+	"mode": 2
+  },
+  "kingdoms": {
+    "Sturgia": {
+      "mode": 2
+    },
+    "Vlandia": {
+      "mode": 2
+    }
+  },
+  "clans": {
+     "PlayerClan":{
+	"mode": 2,
+	"FollowKingdomColors": "false"
+     },
+     "Sea Raiders":{ "mode": 1 },
+     "Mountain Bandits":{ "mode": 1 },
+     "Forest Bandits":{ "mode": 1 },
+     "Desert Bandits":{ "mode": 1 },
+     "Steppe Bandits":{ "mode": 1 }
+  },
+  "units": {
+    "Looter": {
+      "mode": 1
+    }
+  }
+}

@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <LangVersion>11.0</LangVersion>
+    <Version>$(BuildVersion)</Version>
+    <Platforms>x64</Platforms>
+    <ModuleId>PocColor</ModuleId>
+    <ModuleName>POC Color Randomizer mod</ModuleName>
+    <GameVersionWithPrefix>v$(GameVersion)</GameVersionWithPrefix>
+    <CopyLocalLockFileAssemblies>True</CopyLocalLockFileAssemblies>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <GenerateAssemblyInfo>False</GenerateAssemblyInfo>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\Properties\AssemblyInfo.cs" Link="Properties\AssemblyInfo.cs" />
+    <ProjectReference Include="..\PocColor.Domain\PocColor.Domain.csproj" />
+    <ProjectReference Include="..\PocColor.Infrastructure\PocColor.Infrastructure.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Bannerlord.BuildResources" Version="1.1.0.108" PrivateAssets="all" IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive" />
+    <PackageReference Include="Bannerlord.ReferenceAssemblies.Core" Version="1.4.6.115628" />
+    <PackageReference Include="Bannerlord.ReferenceAssemblies.Native" Version="1.4.6.115628" />
+    <PackageReference Include="Bannerlord.ReferenceAssemblies.Sandbox" Version="1.4.6.115628" />
+    <PackageReference Include="Lib.Harmony" Version="2.4.2" />
+    <PackageReference Include="Harmony.DependencyInjection" Version="0.2.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.1.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="2.1.0" />
+  </ItemGroup>
+</Project>

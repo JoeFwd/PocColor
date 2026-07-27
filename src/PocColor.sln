@@ -1,0 +1,48 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PocColor.Domain", "PocColor.Domain\PocColor.Domain.csproj", "{C445E47D-4BCA-4B5B-A7A3-7A609C2C6039}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PocColor.Infrastructure", "PocColor.Infrastructure\PocColor.Infrastructure.csproj", "{22226EC1-1D7C-4456-8F49-F0B2B4C8B42D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PocColor.Integration", "PocColor.Integration\PocColor.Integration.csproj", "{4A3B8B7C-9D71-4F32-A5B4-19580A77C5D3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PocColor.Domain.Tests", "PocColor.Domain.Tests\PocColor.Domain.Tests.csproj", "{D7F9E5DC-9D8B-43C2-BB10-F5A6CAB53685}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PocColor.Infrastructure.Tests", "PocColor.Infrastructure.Tests\PocColor.Infrastructure.Tests.csproj", "{239F2BE7-DFD7-4A08-ADB7-2796A8CFCB2E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PocColor.Integration.Tests", "PocColor.Integration.Tests\PocColor.Integration.Tests.csproj", "{B0085E65-45BA-471B-8A84-AB9B97A68B6B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C445E47D-4BCA-4B5B-A7A3-7A609C2C6039}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C445E47D-4BCA-4B5B-A7A3-7A609C2C6039}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C445E47D-4BCA-4B5B-A7A3-7A609C2C6039}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C445E47D-4BCA-4B5B-A7A3-7A609C2C6039}.Release|Any CPU.Build.0 = Release|Any CPU
+		{22226EC1-1D7C-4456-8F49-F0B2B4C8B42D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{22226EC1-1D7C-4456-8F49-F0B2B4C8B42D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{22226EC1-1D7C-4456-8F49-F0B2B4C8B42D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{22226EC1-1D7C-4456-8F49-F0B2B4C8B42D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4A3B8B7C-9D71-4F32-A5B4-19580A77C5D3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4A3B8B7C-9D71-4F32-A5B4-19580A77C5D3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4A3B8B7C-9D71-4F32-A5B4-19580A77C5D3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4A3B8B7C-9D71-4F32-A5B4-19580A77C5D3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D7F9E5DC-9D8B-43C2-BB10-F5A6CAB53685}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D7F9E5DC-9D8B-43C2-BB10-F5A6CAB53685}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D7F9E5DC-9D8B-43C2-BB10-F5A6CAB53685}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D7F9E5DC-9D8B-43C2-BB10-F5A6CAB53685}.Release|Any CPU.Build.0 = Release|Any CPU
+		{239F2BE7-DFD7-4A08-ADB7-2796A8CFCB2E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{239F2BE7-DFD7-4A08-ADB7-2796A8CFCB2E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{239F2BE7-DFD7-4A08-ADB7-2796A8CFCB2E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{239F2BE7-DFD7-4A08-ADB7-2796A8CFCB2E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B0085E65-45BA-471B-8A84-AB9B97A68B6B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B0085E65-45BA-471B-8A84-AB9B97A68B6B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B0085E65-45BA-471B-8A84-AB9B97A68B6B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B0085E65-45BA-471B-8A84-AB9B97A68B6B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,48 @@
+{
+  "defaultConfig": {
+    "mode": 3,
+    "color": [ "#010203", "#040506" ]
+  },
+  "kingdoms": {
+    "Vlandia": {
+      "mode": 3,
+      "color": [ "#111213", "#141516" ],
+      "clans": {
+        "dey_tihr": {
+          "mode": 3,
+          "color": [ "#212223", "#242526" ],
+          "units": {
+            "Vlandian Spearman": {
+              "mode": 3,
+              "color": [ "#102030", "#405060" ]
+            }
+          }
+        }
+      },
+      "units": {
+        "Vlandian Spearman": {
+          "mode": 3,
+          "color": [ "#313233", "#343536" ]
+        }
+      }
+    }
+  },
+  "clans": {
+    "dey_tihr": {
+      "mode": 3,
+      "color": [ "#414243", "#444546" ],
+      "units": {
+        "Vlandian Spearman": {
+          "mode": 3,
+          "color": [ "#515253", "#545556" ]
+        }
+      }
+    }
+  },
+  "units": {
+    "Vlandian Spearman": {
+      "mode": 3,
+      "color": [ "#616263", "#646566" ]
+    }
+  }
+}

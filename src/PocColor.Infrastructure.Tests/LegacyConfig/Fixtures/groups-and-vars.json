@@ -1,0 +1,38 @@
+{
+  "groups": [
+    {
+      "units": [ "Vlandian Spearman", "Vlandian Sergeant" ],
+      "mode": 3,
+      "color": [ "#102030", "#405060" ],
+      "banners": [ "first-$sigil" ],
+      "vars": [
+        {
+          "$sigil": [ "wolf" ]
+        }
+      ]
+    },
+    {
+      "units": [ "Vlandian Spearman" ],
+      "mode": 3,
+      "color": [ "#506070", "#8090A0" ],
+      "banners": [ "second-$sigil" ],
+      "vars": [
+        {
+          "$sigil": [ "lion" ]
+        }
+      ]
+    }
+  ],
+  "units": {
+    "Vlandian Sergeant": {
+      "mode": 3,
+      "color": [ "#708090", "#A0B0C0" ],
+      "banners": [ "explicit-$sigil" ],
+      "vars": [
+        {
+          "$sigil": [ "stag" ]
+        }
+      ]
+    }
+  }
+}

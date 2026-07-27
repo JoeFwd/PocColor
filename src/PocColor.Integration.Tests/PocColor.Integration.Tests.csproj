@@ -1,0 +1,43 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
+    <PackageReference Include="xunit" Version="2.9.3" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2">
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <ProjectReference Include="..\PocColor.Integration\PocColor.Integration.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="$(GameFolder)\bin\Win64_Shipping_Client\TaleWorlds.MountAndBlade.dll" Link="TaleWorlds.MountAndBlade.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="$(GameFolder)\bin\Win64_Shipping_Client\TaleWorlds.Core.dll" Link="TaleWorlds.Core.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="$(GameFolder)\bin\Win64_Shipping_Client\TaleWorlds.CampaignSystem.dll" Link="TaleWorlds.CampaignSystem.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="$(GameFolder)\bin\Win64_Shipping_Client\TaleWorlds.ObjectSystem.dll" Link="TaleWorlds.ObjectSystem.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="$(GameFolder)\bin\Win64_Shipping_Client\TaleWorlds.Library.dll" Link="TaleWorlds.Library.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="$(GameFolder)\bin\Win64_Shipping_Client\TaleWorlds.Localization.dll" Link="TaleWorlds.Localization.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="$(GameFolder)\bin\Win64_Shipping_Client\TaleWorlds.DotNet.dll" Link="TaleWorlds.DotNet.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="$(GameFolder)\Modules\Bannerlord.Harmony\bin\Win64_Shipping_Client\0Harmony.dll" Link="0Harmony.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+</Project>

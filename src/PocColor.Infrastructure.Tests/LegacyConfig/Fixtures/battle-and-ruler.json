@@ -1,0 +1,19 @@
+{
+  "kingdoms": {
+    "Vlandia": {
+      "BearRulerColors": "true",
+      "BearRulerBanner": "true",
+      "BearRulerShield": "true",
+      "rulerMode": 3,
+      "rulerColor": [ "#112233", "#445566" ],
+      "rulerBanner": "ruler-banner",
+      "rulerShield": "ruler-shield",
+      "units": {
+        "Vlandian Spearman": {
+          "combatBanners": [ "battle-banner" ],
+          "combatShields": [ "battle-shield" ]
+        }
+      }
+    }
+  }
+}

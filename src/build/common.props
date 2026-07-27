@@ -1,0 +1,13 @@
+<Project>
+  <PropertyGroup>
+    <BuildVersion>2.0.1</BuildVersion>
+    <GameVersion>1.4.6</GameVersion>
+  </PropertyGroup>
+
+  <!-- Prefer the selected Bannerlord installation; fall back to the checkout's
+       relative game root for local module builds. -->
+  <PropertyGroup>
+    <GameFolder Condition="'$(GameFolder)' == '' and '$(BANNERLORD_GAME_DIR)' != ''">$(BANNERLORD_GAME_DIR)</GameFolder>
+    <GameFolder Condition="'$(GameFolder)' == ''">$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)../../../..'))</GameFolder>
+  </PropertyGroup>
+</Project>

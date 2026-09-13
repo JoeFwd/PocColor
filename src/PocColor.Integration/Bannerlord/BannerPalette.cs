@@ -13,15 +13,6 @@ public sealed class BannerPalette
         127, 128, 132, 138, 140, 141, 142, 143, 145, 149, 150, 154, 158, 159
     };
 
-    private readonly BannerSnapshotFactory _snapshots;
-    private readonly BannerCodePaletteMigrator _paletteMigrator;
-
-    public BannerPalette(BannerSnapshotFactory snapshots, BannerCodePaletteMigrator paletteMigrator)
-    {
-        _snapshots = snapshots ?? throw new ArgumentNullException(nameof(snapshots));
-        _paletteMigrator = paletteMigrator ?? throw new ArgumentNullException(nameof(paletteMigrator));
-    }
-
     public AppearancePalette Create()
     {
         return new AppearancePalette(null, CreateDefaultColors(), CreateSnapshot);
@@ -36,7 +27,7 @@ public sealed class BannerPalette
 
         try
         {
-            return _snapshots.Create(new Banner(_paletteMigrator.MigrateV12PaletteIds(code)));
+            return BannerSerializer.CreateSnapshot(new Banner(code));
         }
         catch (Exception)
         {

@@ -29,12 +29,6 @@ public sealed class ReflectionCampaignStateWriter : ICampaignStateWriter
 {
     private static readonly Lazy<CampaignStateBindings> Bindings =
         new Lazy<CampaignStateBindings>(CampaignStateBindings.Create);
-    private readonly BannerCodePaletteMigrator _paletteMigrator;
-
-    public ReflectionCampaignStateWriter(BannerCodePaletteMigrator paletteMigrator)
-    {
-        _paletteMigrator = paletteMigrator ?? throw new ArgumentNullException(nameof(paletteMigrator));
-    }
 
     public void SetKingdomPrimaryColor(Kingdom kingdom, uint color)
     {
@@ -51,13 +45,13 @@ public sealed class ReflectionCampaignStateWriter : ICampaignStateWriter
     public void SetKingdomBanner(Kingdom kingdom, string bannerCode)
     {
         EnsureTarget(kingdom, nameof(kingdom));
-        Bindings.Value.Kingdom.SetBanner(kingdom, new Banner(_paletteMigrator.MigrateV12PaletteIds(bannerCode)));
+        Bindings.Value.Kingdom.SetBanner(kingdom, new Banner(bannerCode));
     }
 
     public void SetClanBanner(Clan clan, string bannerCode)
     {
         EnsureTarget(clan, nameof(clan));
-        Bindings.Value.Clan.SetBanner(clan, new Banner(_paletteMigrator.MigrateV12PaletteIds(bannerCode)));
+        Bindings.Value.Clan.SetBanner(clan, new Banner(bannerCode));
     }
 
     private static void EnsureTarget(object target, string parameterName)

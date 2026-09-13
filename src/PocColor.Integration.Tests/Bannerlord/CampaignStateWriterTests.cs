@@ -9,7 +9,7 @@ namespace PocColor.Integration.Tests.Bannerlord;
 
 public sealed class CampaignStateWriterTests
 {
-    private readonly ICampaignStateWriter _writer = new ReflectionCampaignStateWriter(new BannerCodePaletteMigrator());
+    private readonly ICampaignStateWriter _writer = new ReflectionCampaignStateWriter();
 
     [Fact]
     public void Rejects_a_null_kingdom_target_before_reflection()

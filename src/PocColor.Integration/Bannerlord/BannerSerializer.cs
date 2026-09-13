@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.Text;
+using PocColor.Domain.Appearance.Model;
 using TaleWorlds.Core;
 
 namespace PocColor.Integration.Bannerlord;
@@ -45,5 +47,19 @@ public static class BannerSerializer
         }
 
         return builder.ToString();
+    }
+
+    public static BannerSnapshot CreateSnapshot(Banner banner)
+    {
+        var colors = new List<ColorReference>();
+        if (banner?.BannerDataList != null)
+        {
+            foreach (BannerData data in banner.BannerDataList)
+            {
+                colors.Add(ColorReference.FromPaletteId(data.ColorId));
+            }
+        }
+
+        return new BannerSnapshot(Serialize(banner), colors);
     }
 }

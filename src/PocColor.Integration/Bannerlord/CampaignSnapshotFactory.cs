@@ -9,6 +9,7 @@ namespace PocColor.Integration.Bannerlord;
 
 public sealed class CampaignSnapshotFactory
 {
+    private readonly BannerSerializer _bannerSerializer;
     private readonly AppearanceRuleSet _rules;
     private readonly IPlanCampaignBannerUseCase _planner;
     private readonly ICampaignStateWriter _stateWriter;
@@ -20,10 +21,12 @@ public sealed class CampaignSnapshotFactory
     public CampaignSnapshotFactory(
         AppearanceRuleSet rules,
         ICampaignStateWriter stateWriter,
+        BannerSerializer bannerSerializer,
         IPlanCampaignBannerUseCase planner = null)
     {
         _rules = rules ?? new AppearanceRuleSet(null);
         _stateWriter = stateWriter ?? throw new ArgumentNullException(nameof(stateWriter));
+        _bannerSerializer = bannerSerializer ?? throw new ArgumentNullException(nameof(bannerSerializer));
         _planner = planner ?? new PlanCampaignBannerUseCase();
     }
 
@@ -88,7 +91,7 @@ public sealed class CampaignSnapshotFactory
     private void ApplyKingdom(Kingdom kingdom)
     {
         string kingdomName = kingdom.Name?.ToString();
-        AddBannerOwner(BannerSerializer.Serialize(kingdom.Banner), kingdomName, kingdom.RulingClan?.Name?.ToString());
+        AddBannerOwner(_bannerSerializer.Serialize(kingdom.Banner), kingdomName, kingdom.RulingClan?.Name?.ToString());
 
         bool isPlayerKingdom = Clan.PlayerClan?.Kingdom == kingdom;
         CampaignKingdomPolicy policy = _rules.GetCampaignKingdomPolicy(kingdomName, isPlayerKingdom);
@@ -115,7 +118,7 @@ public sealed class CampaignSnapshotFactory
         _kingdomColors[kingdom] = new KingdomColors(
             primaryColor ?? kingdom.PrimaryBannerColor,
             secondaryColor ?? kingdom.SecondaryBannerColor);
-        AddBannerOwner(BannerSerializer.Serialize(kingdom.Banner), kingdomName, kingdom.RulingClan?.Name?.ToString());
+        AddBannerOwner(_bannerSerializer.Serialize(kingdom.Banner), kingdomName, kingdom.RulingClan?.Name?.ToString());
     }
 
     private void ApplyClan(Kingdom kingdom, Clan clan)
@@ -130,7 +133,7 @@ public sealed class CampaignSnapshotFactory
             clanName,
             isPlayerKingdom,
             isPlayerClan,
-            BannerSerializer.Serialize(clan.Banner));
+            _bannerSerializer.Serialize(clan.Banner));
         CampaignBannerChange change = _planner.Plan(policy);
 
         uint? configuredPrimaryColor = BannerlordAppearanceApplier.Resolve(change.ConfiguredPrimaryColor);
@@ -155,10 +158,10 @@ public sealed class CampaignSnapshotFactory
             policy.FollowKingdomColors,
             policy.FollowKingdomBackgroundOnly,
             policy.ConfiguredBannerCode,
-            BannerSerializer.Serialize(clan.Banner),
+            _bannerSerializer.Serialize(clan.Banner),
             policy.ConfiguredPrimaryColor,
             policy.ConfiguredSecondaryColor));
-        AddBannerOwner(BannerSerializer.Serialize(clan.Banner), kingdomName, clanName);
+        AddBannerOwner(_bannerSerializer.Serialize(clan.Banner), kingdomName, clanName);
     }
 
     private static void ApplyClanColors(Banner banner, CampaignBannerChange change, KingdomColors kingdomColors)

@@ -3,19 +3,21 @@ using System.Collections.Generic;
 using PocColor.Domain.Appearance.Model;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
-using TaleWorlds.ObjectSystem;
 
 namespace PocColor.Integration.Bannerlord;
 
 public sealed class UnitProfileFactory
 {
+    private readonly BannerSerializer _bannerSerializer;
     private readonly IReadOnlyDictionary<string, string> _kingdomsByBanner;
     private readonly IReadOnlyDictionary<string, string> _clansByBanner;
 
     public UnitProfileFactory(
+        BannerSerializer bannerSerializer,
         IReadOnlyDictionary<string, string> kingdomsByBanner = null,
         IReadOnlyDictionary<string, string> clansByBanner = null)
     {
+        _bannerSerializer = bannerSerializer ?? throw new ArgumentNullException(nameof(bannerSerializer));
         _kingdomsByBanner = kingdomsByBanner;
         _clansByBanner = clansByBanner;
     }
@@ -26,7 +28,7 @@ public sealed class UnitProfileFactory
         CharacterObject campaignCharacter = character as CharacterObject ?? FindCharacter(unitName);
         Clan clan = campaignCharacter?.HeroObject?.Clan;
         Kingdom kingdom = clan?.Kingdom;
-        string bannerCode = BannerSerializer.Serialize(banner);
+        string bannerCode = _bannerSerializer.Serialize(banner);
 
         string cachedClanName = GetCached(_clansByBanner, bannerCode);
         string cachedKingdomName = GetCached(_kingdomsByBanner, bannerCode);
@@ -51,7 +53,7 @@ public sealed class UnitProfileFactory
             character?.IsRanged ?? false,
             campaignCharacter?.Tier ?? 0,
             character?.Culture?.Name?.ToString(),
-            BannerSerializer.Serialize(rulerKingdom?.RulingClan?.Banner));
+            _bannerSerializer.Serialize(rulerKingdom?.RulingClan?.Banner));
     }
 
     private static string GetCached(IReadOnlyDictionary<string, string> cache, string bannerCode)

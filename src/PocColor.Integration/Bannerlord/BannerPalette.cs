@@ -13,6 +13,13 @@ public sealed class BannerPalette
         127, 128, 132, 138, 140, 141, 142, 143, 145, 149, 150, 154, 158, 159
     };
 
+    private readonly BannerSnapshotMapper _bannerSnapshotMapper;
+
+    public BannerPalette(BannerSnapshotMapper bannerSnapshotMapper)
+    {
+        _bannerSnapshotMapper = bannerSnapshotMapper ?? throw new ArgumentNullException(nameof(bannerSnapshotMapper));
+    }
+
     public AppearancePalette Create()
     {
         return new AppearancePalette(null, CreateDefaultColors(), CreateSnapshot);
@@ -27,7 +34,7 @@ public sealed class BannerPalette
 
         try
         {
-            return BannerSerializer.CreateSnapshot(new Banner(code));
+            return _bannerSnapshotMapper.CreateSnapshot(new Banner(code));
         }
         catch (Exception)
         {

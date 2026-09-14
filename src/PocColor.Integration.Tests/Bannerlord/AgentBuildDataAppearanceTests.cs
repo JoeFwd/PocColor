@@ -3,6 +3,7 @@ using System.Runtime.CompilerServices;
 using PocColor.Domain.Appearance;
 using PocColor.Domain.Appearance.Model;
 using PocColor.Domain.Appearance.Port;
+using PocColor.Integration.Bannerlord;
 using PocColor.Integration.Runtime;
 using TaleWorlds.Core;
 using TaleWorlds.MountAndBlade;
@@ -75,7 +76,12 @@ public sealed class AgentBuildDataAppearanceTests
 
     private static PocColorRuntimeBridge CreateBridge(AppearanceRuleSet rules, IChoiceSource choices)
     {
-        return new PocColorRuntimeBridge(rules, choices);
+        var serializer = new BannerSerializer();
+        return new PocColorRuntimeBridge(
+            rules,
+            choices,
+            new BannerSnapshotMapper(serializer),
+            new UnitProfileFactory(serializer));
     }
 
     private static AppearanceRuleSet CreateRandomConfiguredRules()

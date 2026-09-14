@@ -44,11 +44,16 @@ public sealed class PocColorServiceContainer
     private static void RegisterIntegrationServices(IServiceCollection services, string moduleDirectory)
     {
         services.AddSingleton<ICampaignStateWriter, ReflectionCampaignStateWriter>();
+        services.AddSingleton<BannerSerializer>();
+        services.AddSingleton<BannerSnapshotMapper>();
         services.AddSingleton<CampaignSnapshotFactory>();
         services.AddSingleton<UnitProfileFactory>(provider =>
         {
             CampaignSnapshotFactory campaigns = provider.GetRequiredService<CampaignSnapshotFactory>();
-            return new UnitProfileFactory(campaigns.KingdomsByBanner, campaigns.ClansByBanner);
+            return new UnitProfileFactory(
+                provider.GetRequiredService<BannerSerializer>(),
+                campaigns.KingdomsByBanner,
+                campaigns.ClansByBanner);
         });
         services.AddSingleton<BannerPalette>();
         services.AddSingleton<BannerlordAppearanceApplier>();

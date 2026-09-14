@@ -20,13 +20,15 @@ public sealed class PocColorRuntimeBridge
     private readonly BannerlordAppearanceApplier _applier;
     private readonly CampaignSnapshotFactory _campaigns;
     private readonly ConditionalWeakTable<AgentBuildData, BuildAppearance> _buildAppearances = new();
+    private readonly BannerSnapshotMapper _bannerSnapshotMapper;
 
     private BuildAppearance _lastBuildAppearance;
 
     public PocColorRuntimeBridge(
         AppearanceRuleSet rules,
         IChoiceSource choices,
-        UnitProfileFactory profiles = null,
+        BannerSnapshotMapper bannerSnapshotMapper,
+        UnitProfileFactory profiles,
         BannerPalette palette = null,
         BannerlordAppearanceApplier applier = null,
         CampaignSnapshotFactory campaigns = null,
@@ -34,9 +36,10 @@ public sealed class PocColorRuntimeBridge
     {
         _rules = rules ?? new AppearanceRuleSet(null);
         _choices = choices ?? throw new ArgumentNullException(nameof(choices));
+        _bannerSnapshotMapper = bannerSnapshotMapper ?? throw new ArgumentNullException(nameof(bannerSnapshotMapper));
+        _profiles = profiles ?? throw new ArgumentNullException(nameof(profiles));
         _resolver = resolver ?? new ResolveAppearanceUseCase();
-        _profiles = profiles ?? new UnitProfileFactory();
-        _palette = palette ?? new BannerPalette();
+        _palette = palette ?? new BannerPalette(_bannerSnapshotMapper);
         _applier = applier ?? new BannerlordAppearanceApplier();
         _campaigns = campaigns;
     }
@@ -130,7 +133,7 @@ public sealed class PocColorRuntimeBridge
 
     private ResolvedAppearance Resolve(UnitProfile profile, Banner banner, ResolutionKind kind)
     {
-        BannerSnapshot currentBanner = BannerSerializer.CreateSnapshot(banner);
+        BannerSnapshot currentBanner = _bannerSnapshotMapper.CreateSnapshot(banner);
         return _resolver.Resolve(
             _rules,
             profile,

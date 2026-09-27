@@ -46,14 +46,15 @@ public sealed class PocColorServiceContainer
         services.AddSingleton<ICampaignStateWriter, ReflectionCampaignStateWriter>();
         services.AddSingleton<BannerSerializer>();
         services.AddSingleton<BannerSnapshotMapper>();
-        services.AddSingleton<CampaignSnapshotFactory>();
+        services.AddSingleton<CampaignBannerRegistry>();
+        services.AddSingleton<CampaignAppearanceSynchronizer>();
         services.AddSingleton<UnitProfileFactory>(provider =>
         {
-            CampaignSnapshotFactory campaigns = provider.GetRequiredService<CampaignSnapshotFactory>();
+            CampaignBannerRegistry banners = provider.GetRequiredService<CampaignBannerRegistry>();
             return new UnitProfileFactory(
                 provider.GetRequiredService<BannerSerializer>(),
-                campaigns.KingdomsByBanner,
-                campaigns.ClansByBanner);
+                banners.KingdomsByBanner,
+                banners.ClansByBanner);
         });
         services.AddSingleton<BannerPalette>();
         services.AddSingleton<BannerlordAppearanceApplier>();
@@ -69,7 +70,12 @@ public sealed class PocColorServiceContainer
         services.AddSingleton<IPatch, AgentBuildDataBannerPatch>();
         services.AddSingleton<IPatch, AgentBuildDataClothingColor1Patch>();
         services.AddSingleton<IPatch, AgentBuildDataClothingColor2Patch>();
-        services.AddSingleton<IPatch, ClanBannerColorPatch>();
+        services.AddSingleton<IPatch>(provider => new ClanBannerColorPatch(
+            provider.GetRequiredService<PocColorRuntimeBridge>(),
+            PatchType.Prefix));
+        services.AddSingleton<IPatch>(provider => new ClanBannerColorPatch(
+            provider.GetRequiredService<PocColorRuntimeBridge>(),
+            PatchType.Postfix));
     }
 
     private static string GetModuleDirectory()

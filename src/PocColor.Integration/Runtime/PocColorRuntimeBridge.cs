@@ -18,7 +18,7 @@ public sealed class PocColorRuntimeBridge
     private readonly UnitProfileFactory _profiles;
     private readonly BannerPalette _palette;
     private readonly BannerlordAppearanceApplier _applier;
-    private readonly CampaignSnapshotFactory _campaigns;
+    private readonly CampaignAppearanceSynchronizer _campaignAppearance;
     private readonly ConditionalWeakTable<AgentBuildData, BuildAppearance> _buildAppearances = new();
     private readonly BannerSnapshotMapper _bannerSnapshotMapper;
 
@@ -31,7 +31,7 @@ public sealed class PocColorRuntimeBridge
         UnitProfileFactory profiles,
         BannerPalette palette = null,
         BannerlordAppearanceApplier applier = null,
-        CampaignSnapshotFactory campaigns = null,
+        CampaignAppearanceSynchronizer campaignAppearance = null,
         IResolveAppearanceUseCase resolver = null)
     {
         _rules = rules ?? new AppearanceRuleSet(null);
@@ -41,7 +41,7 @@ public sealed class PocColorRuntimeBridge
         _resolver = resolver ?? new ResolveAppearanceUseCase();
         _palette = palette ?? new BannerPalette(_bannerSnapshotMapper);
         _applier = applier ?? new BannerlordAppearanceApplier();
-        _campaigns = campaigns;
+        _campaignAppearance = campaignAppearance;
     }
 
     public ResolvedAppearance LastResolvedAppearance { get; private set; }
@@ -116,14 +116,19 @@ public sealed class PocColorRuntimeBridge
         return Resolve(profile, banner, resolutionKind);
     }
 
-    public void ReapplyClanBanner(Clan clan)
+    public string CaptureClanBannerBeforeKingdomUpdate(Clan clan)
     {
-        _campaigns?.ReapplyClanBanner(clan);
+        return _campaignAppearance?.CaptureClanBannerBeforeKingdomUpdate(clan);
     }
 
-    public void ApplyCampaign()
+    public void RestoreClanBannerAfterKingdomUpdate(Clan clan, string bannerCodeBeforeKingdomUpdate)
     {
-        _campaigns?.Apply();
+        _campaignAppearance?.RestoreClanBannerAfterKingdomUpdate(clan, bannerCodeBeforeKingdomUpdate);
+    }
+
+    public void SynchronizeCampaignAppearance()
+    {
+        _campaignAppearance?.Synchronize();
     }
 
     private ResolvedAppearance Resolve(BasicCharacterObject character, Banner banner, ResolutionKind kind)

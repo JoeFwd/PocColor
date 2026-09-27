@@ -14,16 +14,16 @@ public sealed class PocColorCampaignBehavior : CampaignBehaviorBase
 
     public override void RegisterEvents()
     {
-        CampaignEvents.OnNewGameCreatedEvent.AddNonSerializedListener(this, ApplyCampaign);
-        CampaignEvents.OnGameLoadedEvent.AddNonSerializedListener(this, ApplyCampaign);
+        CampaignEvents.OnNewGameCreatedEvent.AddNonSerializedListener(this, SynchronizeCampaignAppearance);
+        CampaignEvents.OnGameLoadedEvent.AddNonSerializedListener(this, SynchronizeCampaignAppearance);
     }
 
     public override void SyncData(IDataStore dataStore)
     {
     }
 
-    private void ApplyCampaign(CampaignGameStarter _)
+    private void SynchronizeCampaignAppearance(CampaignGameStarter _)
     {
-        _bridge.ApplyCampaign();
+        _bridge.SynchronizeCampaignAppearance();
     }
 }

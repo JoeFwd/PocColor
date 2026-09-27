@@ -33,4 +33,21 @@ public sealed class CampaignBannerChange
     public ColorReference ConfiguredPrimaryColor { get; }
 
     public ColorReference ConfiguredSecondaryColor { get; }
+
+    public string ResolveBannerCodeToRestore(string bannerCodeBeforeKingdomUpdate)
+    {
+        if (string.IsNullOrWhiteSpace(BannerCodeToRestore))
+        {
+            return null;
+        }
+
+        if (!string.IsNullOrWhiteSpace(ConfiguredBannerCode))
+        {
+            return ConfiguredBannerCode;
+        }
+
+        return string.IsNullOrWhiteSpace(bannerCodeBeforeKingdomUpdate)
+            ? BannerCodeToRestore
+            : bannerCodeBeforeKingdomUpdate;
+    }
 }

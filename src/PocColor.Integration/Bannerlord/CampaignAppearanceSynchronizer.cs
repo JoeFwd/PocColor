@@ -7,39 +7,35 @@ using TaleWorlds.Core;
 
 namespace PocColor.Integration.Bannerlord;
 
-public sealed class CampaignSnapshotFactory
+public sealed class CampaignAppearanceSynchronizer
 {
     private readonly BannerSerializer _bannerSerializer;
+    private readonly CampaignBannerRegistry _bannerRegistry;
     private readonly AppearanceRuleSet _rules;
     private readonly IPlanCampaignBannerUseCase _planner;
     private readonly ICampaignStateWriter _stateWriter;
     private readonly Dictionary<Clan, CampaignBannerChange> _clanChanges = new Dictionary<Clan, CampaignBannerChange>();
     private readonly Dictionary<Kingdom, KingdomColors> _kingdomColors = new Dictionary<Kingdom, KingdomColors>();
-    private readonly Dictionary<string, string> _kingdomsByBanner = new Dictionary<string, string>(StringComparer.Ordinal);
-    private readonly Dictionary<string, string> _clansByBanner = new Dictionary<string, string>(StringComparer.Ordinal);
 
-    public CampaignSnapshotFactory(
+    public CampaignAppearanceSynchronizer(
         AppearanceRuleSet rules,
         ICampaignStateWriter stateWriter,
         BannerSerializer bannerSerializer,
+        CampaignBannerRegistry bannerRegistry,
         IPlanCampaignBannerUseCase planner = null)
     {
         _rules = rules ?? new AppearanceRuleSet(null);
         _stateWriter = stateWriter ?? throw new ArgumentNullException(nameof(stateWriter));
         _bannerSerializer = bannerSerializer ?? throw new ArgumentNullException(nameof(bannerSerializer));
+        _bannerRegistry = bannerRegistry ?? throw new ArgumentNullException(nameof(bannerRegistry));
         _planner = planner ?? new PlanCampaignBannerUseCase();
     }
 
-    public IReadOnlyDictionary<string, string> KingdomsByBanner => _kingdomsByBanner;
-
-    public IReadOnlyDictionary<string, string> ClansByBanner => _clansByBanner;
-
-    public void Apply()
+    public void Synchronize()
     {
         _clanChanges.Clear();
         _kingdomColors.Clear();
-        _kingdomsByBanner.Clear();
-        _clansByBanner.Clear();
+        _bannerRegistry.Clear();
 
         Campaign campaign = Campaign.Current;
         if (campaign == null)
@@ -65,18 +61,32 @@ public sealed class CampaignSnapshotFactory
         }
     }
 
-    public void ReapplyClanBanner(Clan clan)
+    public string CaptureClanBannerBeforeKingdomUpdate(Clan clan)
+    {
+        return _bannerSerializer.Serialize(clan?.Banner);
+    }
+
+    public void RestoreClanBannerAfterKingdomUpdate(Clan clan, string bannerCodeBeforeKingdomUpdate)
     {
         if (clan == null
-            || clan.Kingdom?.RulingClan == clan
-            || !_clanChanges.TryGetValue(clan, out CampaignBannerChange change))
+            || clan.Kingdom?.RulingClan == clan)
         {
             return;
         }
 
-        if (!string.IsNullOrWhiteSpace(change.BannerCodeToRestore))
+        if (!_clanChanges.TryGetValue(clan, out CampaignBannerChange change))
         {
-            _stateWriter.SetClanBanner(clan, change.BannerCodeToRestore);
+            change = _planner.Plan(GetClanBannerPolicy(
+                clan.Kingdom,
+                clan,
+                bannerCodeBeforeKingdomUpdate));
+            _clanChanges[clan] = change;
+        }
+
+        string bannerCodeToRestore = change.ResolveBannerCodeToRestore(bannerCodeBeforeKingdomUpdate);
+        if (!string.IsNullOrWhiteSpace(bannerCodeToRestore))
+        {
+            _stateWriter.SetClanBanner(clan, bannerCodeToRestore);
             return;
         }
 
@@ -91,7 +101,10 @@ public sealed class CampaignSnapshotFactory
     private void ApplyKingdom(Kingdom kingdom)
     {
         string kingdomName = kingdom.Name?.ToString();
-        AddBannerOwner(_bannerSerializer.Serialize(kingdom.Banner), kingdomName, kingdom.RulingClan?.Name?.ToString());
+        _bannerRegistry.Register(
+            _bannerSerializer.Serialize(kingdom.Banner),
+            kingdomName,
+            kingdom.RulingClan?.Name?.ToString());
 
         bool isPlayerKingdom = Clan.PlayerClan?.Kingdom == kingdom;
         CampaignKingdomPolicy policy = _rules.GetCampaignKingdomPolicy(kingdomName, isPlayerKingdom);
@@ -118,21 +131,18 @@ public sealed class CampaignSnapshotFactory
         _kingdomColors[kingdom] = new KingdomColors(
             primaryColor ?? kingdom.PrimaryBannerColor,
             secondaryColor ?? kingdom.SecondaryBannerColor);
-        AddBannerOwner(_bannerSerializer.Serialize(kingdom.Banner), kingdomName, kingdom.RulingClan?.Name?.ToString());
+        _bannerRegistry.Register(
+            _bannerSerializer.Serialize(kingdom.Banner),
+            kingdomName,
+            kingdom.RulingClan?.Name?.ToString());
     }
 
     private void ApplyClan(Kingdom kingdom, Clan clan)
     {
         Kingdom resolvedKingdom = kingdom ?? clan.Kingdom;
-        string kingdomName = resolvedKingdom?.Name?.ToString();
-        string clanName = clan.Name?.ToString();
-        bool isPlayerKingdom = Clan.PlayerClan?.Kingdom == resolvedKingdom;
-        bool isPlayerClan = Clan.PlayerClan == clan;
-        CampaignBannerPolicy policy = _rules.GetCampaignBannerPolicy(
-            kingdomName,
-            clanName,
-            isPlayerKingdom,
-            isPlayerClan,
+        CampaignBannerPolicy policy = GetClanBannerPolicy(
+            resolvedKingdom,
+            clan,
             _bannerSerializer.Serialize(clan.Banner));
         CampaignBannerChange change = _planner.Plan(policy);
 
@@ -161,7 +171,23 @@ public sealed class CampaignSnapshotFactory
             _bannerSerializer.Serialize(clan.Banner),
             policy.ConfiguredPrimaryColor,
             policy.ConfiguredSecondaryColor));
-        AddBannerOwner(_bannerSerializer.Serialize(clan.Banner), kingdomName, clanName);
+        _bannerRegistry.Register(
+            _bannerSerializer.Serialize(clan.Banner),
+            resolvedKingdom?.Name?.ToString(),
+            clan.Name?.ToString());
+    }
+
+    private CampaignBannerPolicy GetClanBannerPolicy(Kingdom kingdom, Clan clan, string cachedBannerCode)
+    {
+        string kingdomName = kingdom?.Name?.ToString();
+        string clanName = clan.Name?.ToString();
+        Clan playerClan = Campaign.Current == null ? null : Clan.PlayerClan;
+        return _rules.GetCampaignBannerPolicy(
+            kingdomName,
+            clanName,
+            playerClan?.Kingdom == kingdom,
+            playerClan == clan,
+            cachedBannerCode);
     }
 
     private static void ApplyClanColors(Banner banner, CampaignBannerChange change, KingdomColors kingdomColors)
@@ -199,24 +225,6 @@ public sealed class CampaignSnapshotFactory
         return _kingdomColors.TryGetValue(kingdom, out KingdomColors colors)
             ? colors
             : new KingdomColors(kingdom.PrimaryBannerColor, kingdom.SecondaryBannerColor);
-    }
-
-    private void AddBannerOwner(string bannerCode, string kingdomName, string clanName)
-    {
-        if (string.IsNullOrEmpty(bannerCode))
-        {
-            return;
-        }
-
-        if (!string.IsNullOrEmpty(kingdomName))
-        {
-            _kingdomsByBanner[bannerCode] = kingdomName;
-        }
-
-        if (!string.IsNullOrEmpty(clanName))
-        {
-            _clansByBanner[bannerCode] = clanName;
-        }
     }
 
     private sealed class KingdomColors

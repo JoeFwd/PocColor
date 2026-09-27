@@ -60,6 +60,25 @@ public sealed class CampaignBannerPlannerTests
         Assert.Equal(bannerCodeToRestore, change.BannerCodeToRestore);
     }
 
+    [Theory]
+    [InlineData(false, false, null, "cached-banner", "edited-banner", "edited-banner")]
+    [InlineData(false, false, null, "cached-banner", null, "cached-banner")]
+    [InlineData(false, false, "configured-banner", "cached-banner", "edited-banner", "configured-banner")]
+    [InlineData(true, false, null, "cached-banner", "edited-banner", null)]
+    public void Restore_uses_the_banner_captured_immediately_before_the_kingdom_update(
+        bool followColors,
+        bool backgroundOnly,
+        string configuredBannerCode,
+        string cachedBannerCode,
+        string bannerCodeBeforeKingdomUpdate,
+        string expectedBannerCode)
+    {
+        CampaignBannerChange change = new PlanCampaignBannerUseCase().Plan(
+            Policy(followColors, backgroundOnly, configuredBannerCode, cachedBannerCode));
+
+        Assert.Equal(expectedBannerCode, change.ResolveBannerCodeToRestore(bannerCodeBeforeKingdomUpdate));
+    }
+
     private static CampaignBannerPolicy Policy(
         bool followColors,
         bool backgroundOnly,

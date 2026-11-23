@@ -1,7 +1,7 @@
 <Project>
   <PropertyGroup>
     <BuildVersion>2.0.1</BuildVersion>
-    <GameVersion>1.4.8</GameVersion>
+    <GameVersion>1.5.7</GameVersion>
   </PropertyGroup>
 
   <!-- Prefer the selected Bannerlord installation; fall back to the checkout's
